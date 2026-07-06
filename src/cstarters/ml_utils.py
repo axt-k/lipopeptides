@@ -1,13 +1,16 @@
 import csv
+from pathlib import Path
+from importlib.resources import files
 
 import pandas as pd
 import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import accuracy_score
 from sklearn.inspection import permutation_importance
-from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.model_selection import cross_val_score
 from sklearn.utils import shuffle
+
+import cstarters.data
 
 
 def avg(l):
@@ -83,7 +86,10 @@ def drop_labels(df, column, labels):
     """Remove rows where df[column] is in labels."""
     return df[~df[column].isin(labels)].copy()
 
-def load_aa_properties(aa_properties_csv="16_aa_properties.csv"):
+def load_aa_properties(aa_properties_csv=None):
+    if aa_properties_csv is None:
+        aa_properties_csv = get_16_aa_properties_path()
+
     aa_properties_ref = {}
 
     with open(aa_properties_csv, "r") as f:
@@ -125,9 +131,11 @@ def average_value_feature(
     aa_property,
     output_column,
     sequence_column="aligned_sequence",
-    aa_properties_csv="16_aa_properties.csv",
+    aa_properties_csv=None,
     drop_sequence=False,
 ):
+    if aa_properties_csv is None:
+        aa_properties_csv = get_16_aa_properties_path()
     aa_properties_ref = load_aa_properties(aa_properties_csv)
 
     ml_df = dataset_df.copy()
@@ -147,8 +155,17 @@ def average_value_feature(
     return ml_df
 
 
-def featurize_alignment(dataset_df, positions, aa_properties_csv="16_aa_properties.csv"):
+def get_16_aa_properties_path() -> Path:
+    aa_properties_csv = Path(files(cstarters.data)).joinpath("16_aa_properties.csv")
+    return aa_properties_csv
+
+
+def featurize_alignment(dataset_df, positions, aa_properties_csv=None):
     """Turn the aligned sequences into a feature matrix based on the amino acid properties at the specified positions."""
+    if aa_properties_csv is None:
+        aa_properties_csv = get_16_aa_properties_path()
+
+
     aa_properties_ref = {}
     properties_list = []
     with open(aa_properties_csv, 'r') as aa_properties_file:
