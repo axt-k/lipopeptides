@@ -53,6 +53,7 @@ def cli() -> argparse.Namespace:
     parser.add_argument("-v", "--version", action="version", version=f"%(prog)s {__version__}")
     parser.add_argument("--seq", type=str, required=True, help="path to file with input condensation-starter amino acid sequence")
     parser.add_argument("--out", type=str, required=False, default=None, help="optional path to output JSONL with predictions")
+    parser.add_argument("--show-all", action="store_true", required=False, default=False, help="show all predictions even when type is predicted to be AR")
     return parser.parse_args()
 
 def run_mafft_add(reference_alignment, predicted_sequence, output_alignment):
@@ -170,9 +171,6 @@ def main() -> None:
         avg_L = average_value_from_seq(predicted_sequence_aligned, AVG_L_POSITIONS, "vdwvol", aa_properties_ref)
         avg_S = average_value_from_seq(predicted_sequence_aligned, AVG_S_POSITIONS, "vdwvol", aa_properties_ref)
 
-        # X_length = featurize_alignment(predicted_sequence_aligned, PROPERTIES_SIZE, aa_properties_ref)
-        # X_length.insert(0, "avg_size_tunnel_L", avg_L)
-        # X_length.insert(1, "avg_size_tunnel_S", avg_S)
         X_length_features = featurize_alignment(predicted_sequence_aligned, PROPERTIES_SIZE, aa_properties_ref)
         X_length = pd.concat([pd.DataFrame({"avg_size_tunnel_L": [avg_L], "avg_size_tunnel_S": [avg_S]}), X_length_features], axis=1)
 
@@ -194,8 +192,8 @@ def main() -> None:
             "input_file_name": input_file_name_stem,
             "input_sequence": predicted_sequence,
             "type": predicted_type,
-            "hydroxylation": bool(hydroxylation_prediction[0]) if not is_aromatic else None,
-            "length": str(length_prediction[0][0]) if not is_aromatic else None,
+            "hydroxylation": bool(hydroxylation_prediction[0]) if args.show_all or not is_aromatic else None,
+            "length": str(length_prediction[0][0]) if args.show_all or not is_aromatic else None,
         }
 
         print(json.dumps(result_dict, indent=2))
