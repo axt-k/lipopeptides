@@ -1,0 +1,72 @@
+[project]
+name = "cstarters"
+version = "1.0.0"
+description = "Cstarters is a substrate specificity prediction pipeline for condenstation starter domains."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    {name="Kyle Axt", email="axtk@oregonstate.edu"},
+    {name="David Meijer", email="david.meijer@wur.nl"}
+]
+keywords = ["natural-products", "biosynthesis", "condensation-starter", "acyl-starter"]
+
+dependencies = [
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "rdkit",
+    "scikit-learn",
+    "scipy",
+    "seaborn",
+]
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics"
+]
+
+[project.urls]
+Homepage = "https://github.com/axt-k/lipopeptides"
+Repository = "https://github.com/axt-k/lipopeptides"
+Issues = "https://github.com/axt-k/lipopeptides/issues"
+Documentation = "https://github.com/axt-k/lipopeptides#readme"
+
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cstarters"]
+include = [
+    "src/cstarters/data/16_aa_properties.csv",
+    "src/cstarters/data/ml_aromaticity.pkl",
+    "src/cstarters/data/ml_hydroxylation.pkl",
+    "src/cstarters/data/ml_length.pkl",
+]
+
+[project.scripts]
+cstarters = "cstarters.cli:main"
+
+# -------------------------
+# Hatch env + scripts
+# -------------------------
+[tool.hatch.envs.dev]
+features = ["dev"]
+python = "3.11"
+
+[tool.hatch.envs.dev.scripts]
+test = "pytest -q"  # usage: hatch run dev:test

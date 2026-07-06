@@ -1,7 +1,9 @@
-cheminformatics/venv
+scripts/venv
 ml/.venv
 .venv
 .vscode
 .DS_Store
 __pycache__/
 .idea/
+
+out/
