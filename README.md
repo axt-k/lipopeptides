@@ -37,7 +37,7 @@ Predict type (acyl or aromatic), beta-hydroxylation, and length category for an 
 
 ```bash
 conda activate cstarters
-cstarters --fasta data/test/cstarter_aa_seq_BGC0000336.txt --out out/prediction.jsonl
+cstarters --seq data/test/cstarter_aa_seq_BGC0000336.txt --out out/prediction.jsonl
 ```
 
 ```json

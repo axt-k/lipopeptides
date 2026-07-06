@@ -8,6 +8,7 @@ import csv
 import json
 from importlib.resources import files
 from pathlib import Path
+from importlib.metadata import version, PackageNotFoundError
 
 import pandas as pd
 
@@ -42,10 +43,16 @@ PROPERTIES_SIZE = {
 AVG_L_POSITIONS = [96, 97, 98, 320, 338, 340, 342, 349, 351, 352, 356, 357, 814, 818, 902, 924, 932, 936, 938]
 AVG_S_POSITIONS = [96, 97, 98, 349, 352, 814, 818, 924, 932, 936, 938, 944]
 
+try:
+    __version__ = version("cstarters")
+except PackageNotFoundError:
+    __version__ = "0.0.0"
+
 def cli() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--fasta", type=str, required=True)
-    parser.add_argument("--out", type=str, required=False, default=None)
+    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s {__version__}")
+    parser.add_argument("--seq", type=str, required=True, help="path to file with input condensation-starter amino acid sequence")
+    parser.add_argument("--out", type=str, required=False, default=None, help="optional path to output JSONL with predictions")
     return parser.parse_args()
 
 def run_mafft_add(reference_alignment, predicted_sequence, output_alignment):
