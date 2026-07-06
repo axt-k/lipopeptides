@@ -21,6 +21,7 @@ dependencies = [
     "scipy",
     "seaborn",
     "catboost",
+    "logomaker",
 ]
 
 classifiers = [
