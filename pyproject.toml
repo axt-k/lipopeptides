@@ -14,15 +14,15 @@ keywords = ["natural-products", "biosynthesis", "condensation-starter", "acyl-st
 
 dependencies = [
     "matplotlib",
+    "seaborn",
     "numpy",
     "pandas",
-    "rdkit",
-    "scikit-learn",
-    "scipy",
-    "seaborn",
-    "catboost",
-    "logomaker",
-    "biopython",
+    "rdkit==2023.9.4",
+    "scikit-learn==1.5.2",
+    "scipy==1.17.1",
+    "catboost==1.2.10",
+    "logomaker==0.8.7",
+    "biopython==1.87",
 ]
 
 classifiers = [
