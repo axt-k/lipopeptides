@@ -14,7 +14,6 @@ import pandas as pd
 from rdkit import Chem, DataStructs
 from rdkit.Chem import rdFingerprintGenerator
 from sklearn.decomposition import PCA
-from scipy.stats import gaussian_kde
 
 # Use Arial font for plots
 plt.rcParams["font.family"] = "Arial"
@@ -208,25 +207,11 @@ def plot_starter_pca(out_dir: str, ax: plt.Axes, records: list[DataRecord]) -> N
     explained_variance = pca.explained_variance_ratio_
     LOGGER.info(f"explained variance: {explained_variance}")
 
-    unique_labels = np.unique(labels_category)
-    unique_labels = sorted(unique_labels)
-    
-    for label in unique_labels:
-        # First plot a density plot
-        data = pcs[labels_category == label].T
-        color = category_to_color(label)
-        if label in SANCTIONED_LABELS:
-            kde = gaussian_kde(data)
-            xgrid = np.linspace(pcs[:, 0].min() - 0.5, pcs[:, 0].max() + 0.5, 100)
-            ygrid = np.linspace(pcs[:, 1].min() - 0.5, pcs[:, 1].max() + 0.5, 100)
-            Xgrid, Ygrid = np.meshgrid(xgrid, ygrid)
-            Z = kde(np.vstack([Xgrid.ravel(), Ygrid.ravel()])).reshape(Xgrid.shape)
-            # ax.contour(Xgrid, Ygrid, Z, levels=10, colors=color, alpha=0.5, zorder=1)
-
     # Plot the individual points
     for label in SANCTIONED_LABELS:
         if label not in SANCTIONED_LABELS:
             continue
+
         jitter = 0.025
         x = pcs[labels_category == label, 0]
         y = pcs[labels_category == label, 1]
