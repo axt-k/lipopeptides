@@ -15,7 +15,7 @@ keywords = ["natural-products", "biosynthesis", "condensation-starter", "acyl-st
 dependencies = [
     "matplotlib",
     "seaborn",
-    "numpy",
+    "numpy<2",
     "pandas",
     "rdkit==2023.9.4",
     "scikit-learn==1.9.0",
